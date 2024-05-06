@@ -1,0 +1,17 @@
+table,
+td,
+th {
+  border: 2px solid #cabebe;
+  text-align: left;
+}
+
+table tr th {
+  background: #e1e1e1;
+  text-align: left;
+}
+
+th,
+td {
+  padding: 10px 40px 7px 7px;
+}
+
