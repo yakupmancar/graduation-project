@@ -16,12 +16,18 @@ export const register = (req, res) => {
         if (result.length > 0) {
             return res.json("Böyle bir kullanıcı zaten var.");
         } else {
-            const q = "INSERT INTO users (`firstName`, `lastName`, `userName`, `password`) VALUES (?);"
+            const q = "INSERT INTO users (`firstName`, `lastName`, `userName`, `password`, `fk_roleID`) VALUES (?);"
             bcrypt.hash(req.body.password.toString(), salt, (err, hash) => {
-                if (err) return res.json({ Error: "Hash parolasında hata!" })
-                const values = [req.body.firstName, req.body.lastName, req.body.userName, hash]
+                if (err) {
+                    console.error(err); // Hata ayıklama
+                    return res.json({ Error: "Hash parolasında hata!" })
+                }
+                const values = [req.body.firstName, req.body.lastName, req.body.userName, hash, req.body.roleID]
                 db.query(q, [values], (err, data) => {
-                    if (err) return res.json("Insert işleminde hata!");
+                    if (err) {
+                        console.error(err); // Hata ayıklama
+                        return res.json("Insert işleminde hata!");
+                    }
                     return res.json("Kayıt başarılı.")
                 })
             })
@@ -30,9 +36,10 @@ export const register = (req, res) => {
 };
 
 
+
 //! GİRİŞ (LOGİN) İŞLEMİ;
 export const login = (req, res) => {
-    const q = "SELECT * FROM users WHERE userName = ?";
+    const q = "SELECT users.*, roles.roleName FROM users INNER JOIN roles ON users.fk_roleID = roles.roleID WHERE userName = ?";
     db.query(q, [req.body.userName], (err, data) => {
         if (err) return res.json({ Error: "Giriş işleminde hata!" });
         if (data.length > 0) {
@@ -43,7 +50,8 @@ export const login = (req, res) => {
                         userID: data[0].userID,
                         userName: data[0].userName,
                         firstName: data[0].firstName,
-                        lastName: data[0].lastName
+                        lastName: data[0].lastName,
+                        role: data[0].roleName 
                     };
                     const token = jwt.sign({ user }, process.env.JWT_SECRET_KEY, { expiresIn: "1d" });
                     res.cookie('token', token, { httpOnly: true });

@@ -20,7 +20,7 @@ const Home = () => {
 
             <div className='mt-10 text-2xl font-semibold'>
                 <h1>Merhaba {currentUser?.firstName + " " + currentUser?.lastName}, Ders ve Sınav Programı Takvimine hoşgeldiniz.</h1> <br />
-                <h1>-ADMİN- olarak giriş yaptınız.</h1>
+                <h1>-{currentUser?.role}- olarak giriş yaptınız.</h1>
             </div>
         </div>
     )

@@ -44,9 +44,12 @@ const Navbar = () => {
 
 
                 <section className='flex gap-x-8 items-center'>
-                    <Link to="/register">
-                        <button className='font-semibold px-3 py-1 text-gray-300 border-l border-b rounded-md'>Kayıt at</button>
-                    </Link>
+
+                    {currentUser?.role == "Admin" && (
+                        <Link to="/register">
+                            <button className='font-semibold px-3 py-1 text-gray-300 border-l border-b rounded-md'>Kayıt at</button>
+                        </Link>
+                    )}
 
                     <div className='text-gray-300 relative border-l border-b rounded-md px-3 py-1'>
                         <button onClick={toggleOpen}>

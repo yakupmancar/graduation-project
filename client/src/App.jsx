@@ -20,6 +20,7 @@ import SinavTakvimi from "./pages/SinavTakvimi";
 import OgretimUyeleri from "./pages/OgretimUyeleri";
 import GozetmenUyeler from "./pages/GozetmenUyeler";
 import Profil from "./pages/Profil.jsx";
+import Roller from "./pages/Roller.jsx";
 
 const Layout = () => {
   return (
@@ -78,6 +79,10 @@ const router = createBrowserRouter([
       {
         path: "/profil/:id",
         element: <Profil />
+      },
+      {
+        path: "/roller",
+        element: <Roller />
       },
     ]
   },

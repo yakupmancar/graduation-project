@@ -2,10 +2,33 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Select from 'react-select';
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 
 const Register = () => {
+
+    //! ROLES;
+    const [roles, setRoles] = useState([]); // Rollerin saklanacağı yeni state değişkeni
+    const [selectedRole, setSelectedRole] = useState(''); // Seçilen rolün saklanacağı yeni state değişkeni
+
+    // Rollerin çekilmesi
+    useEffect(() => {
+        const fetchRoles = async () => {
+            try {
+                const res = await axios.get("http://localhost:8800/roller");
+                setRoles(res.data);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        fetchRoles();
+    }, []);
+
+    const roleOptions = roles.map((role) => ({
+        value: role.roleID,
+        label: role.roleName,
+    }));
+
 
     const [open, setOpen] = useState(false)
     const handleOpen = () => {
@@ -29,7 +52,7 @@ const Register = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post("http://localhost:8800/auth/register", values);
+            const response = await axios.post("http://localhost:8800/auth/register", { ...values, roleID: selectedRole });
             if (response.data === "Böyle bir kullanıcı zaten var.") {
                 setErrorMessage(response.data);
             } else {
@@ -41,6 +64,8 @@ const Register = () => {
             console.log(error);
         }
     };
+
+
 
 
     return (
@@ -62,10 +87,11 @@ const Register = () => {
                             </div>
 
                             <div className="mb-10">
-                                <Select className='w-[170px]' id='course' name='course'
-                                    // value={courseOptions.find(option => option.value === selectedCourse)}
-                                    // onChange={(selectedOption) => setSelectedCourse(selectedOption.value)}
-                                    // options={courseOptions}
+                                <Select
+                                    className="w-[170px]"
+                                    options={roleOptions}
+                                    value={roleOptions.find((option) => option.value === selectedRole)}
+                                    onChange={(selectedOption) => setSelectedRole(selectedOption.value)}
                                     placeholder="Rol Seçiniz."
                                 />
                             </div>

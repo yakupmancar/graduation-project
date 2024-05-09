@@ -4,7 +4,6 @@ import React, { createContext, useEffect, useState } from "react";
 export const AuthContext = createContext();
 
 export const AuthContextProvider = ({ children }) => {
-
     const [currentUser, setCurrentUser] = useState(
         JSON.parse(localStorage.getItem("user")) || null
     );
@@ -13,10 +12,10 @@ export const AuthContextProvider = ({ children }) => {
         try {
             const res = await axios.post("http://localhost:8800/auth/login", values);
             setCurrentUser(res.data);
-            return res.data; 
+            return res.data;
         } catch (error) {
             console.error(error);
-            return { Error: "Login failed" }; 
+            return { Error: "Login failed" };
         }
     };
 
@@ -40,4 +39,3 @@ export const AuthContextProvider = ({ children }) => {
         </AuthContext.Provider>
     )
 };
-
