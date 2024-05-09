@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import logo1 from "../../images/logo1.png";
 import logo2 from "../../images/logo2.jpg";
 import { Link } from "react-router-dom";
@@ -15,8 +15,25 @@ const Navbar = () => {
 
     const toggleOpen = () => setIsOpen(!isOpen);
 
+    const node = useRef();
+
+    useEffect(() => {
+        const handleClickOutside = (e) => {
+            if (node.current.contains(e.target)) {
+                return;
+            }
+            setIsOpen(false);
+        }
+
+        document.addEventListener("mousedown", handleClickOutside);
+
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
+
     return (
-        <div className='bg-[#29323e] py-3'>
+        <div className='bg-[#29323e] py-3' ref={node}>
             <nav className='flex items-center justify-between max-w-7xl mx-auto'>
                 <section className='flex items-center gap-x-10'>
                     <div className='flex gap-x-2'>

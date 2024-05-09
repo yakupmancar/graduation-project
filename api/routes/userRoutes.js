@@ -1,5 +1,5 @@
 import express from "express";
-import { deleteUser, getUser, updateUser } from "../controllers/userControllers.js";
+import { deleteUser, getUser, updateUser, updatePassword } from "../controllers/userControllers.js";
 
 const router = express.Router();
 
@@ -11,6 +11,8 @@ router.put("/:id", updateUser);
 
 // Kullanıcıyı Sil
 router.delete("/:id", deleteUser);
+
+router.put("/updatePassword/:id", updatePassword);
 
 
 export default router

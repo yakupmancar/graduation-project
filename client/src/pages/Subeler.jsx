@@ -46,6 +46,18 @@ const Subeler = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const existingBranch = branches.find(
+      (branch) =>
+        branch.branchName === e.target.branchName.value &&
+        branch.fk_courseID === selectedCourse &&
+        branch.fk_educationID === selectedEducationType
+    );
+
+    if (existingBranch) {
+      alert("Aynı ders ve öğretim bilgisi için aynı şube adı tekrar eklenemez!");
+      return;
+    }
+
     const newBranch = {
       branchName: e.target.branchName.value,
       fk_courseID: selectedCourse,
