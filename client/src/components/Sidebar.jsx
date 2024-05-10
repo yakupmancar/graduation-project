@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import '../assets/sidebar.css';
 import { Link } from "react-router-dom";
 import { FaHome } from "react-icons/fa";
@@ -12,11 +12,15 @@ import { FaLandmark } from "react-icons/fa6";
 import { BsFillPeopleFill } from "react-icons/bs";
 import { IoPeopleOutline } from "react-icons/io5";
 import { FaCriticalRole } from "react-icons/fa";
+import { AuthContext } from '../context/authContext';
 
 
 
 
 const Sidebar = () => {
+
+    const { currentUser } = useContext(AuthContext);
+
 
     const [isChecked, setIsChecked] = useState(false);
     const handleToggle = () => {
@@ -106,13 +110,15 @@ const Sidebar = () => {
                     <span className={`${isChecked ? 'hidden' : ''}`}>Gözetmen Üyeler</span>
                 </Link>
 
-                <Link to="/roller" className={`flex gap-x-2 px-3 ${activeLink === "/roller" ? "active" : ""}`} onClick={() => handleActiveLink("/roller")}>
-                    <span className='text-xl'>
-                        <FaCriticalRole />
+                {currentUser.role == "Admin" && (
+                    <Link to="/roller" className={`flex gap-x-2 px-3 ${activeLink === "/roller" ? "active" : ""}`} onClick={() => handleActiveLink("/roller")}>
+                        <span className='text-xl'>
+                            <FaCriticalRole />
 
-                    </span>
-                    <span className={`${isChecked ? 'hidden' : ''}`}>Roller</span>
-                </Link>
+                        </span>
+                        <span className={`${isChecked ? 'hidden' : ''}`}>Roller</span>
+                    </Link>
+                )}
 
             </nav>
         </aside>

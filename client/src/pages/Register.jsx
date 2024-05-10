@@ -2,7 +2,8 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Select from 'react-select';
 
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { AuthContext } from "../context/authContext";
 
 
 const Register = () => {
@@ -10,6 +11,12 @@ const Register = () => {
     //! ROLES;
     const [roles, setRoles] = useState([]); // Rollerin saklanacağı yeni state değişkeni
     const [selectedRole, setSelectedRole] = useState(''); // Seçilen rolün saklanacağı yeni state değişkeni
+
+    const { currentUser } = useContext(AuthContext);
+    const isAdmin = () => {
+        return currentUser && currentUser.role === "Admin";
+    };
+
 
     // Rollerin çekilmesi
     useEffect(() => {
@@ -22,6 +29,11 @@ const Register = () => {
             }
         };
         fetchRoles();
+
+        if (!isAdmin()) {
+            navigate('/');
+        }
+        
     }, []);
 
     const roleOptions = roles.map((role) => ({

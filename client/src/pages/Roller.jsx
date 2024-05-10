@@ -1,13 +1,21 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import axios from "axios";
 import '../assets/table.css'
 import { HiPencilSquare } from "react-icons/hi2";
 import { TiDeleteOutline } from "react-icons/ti";
+import { AuthContext } from '../context/authContext';
+import { useNavigate } from 'react-router-dom';
 
 const Roller = () => {
 
     //!VERİ ÇEKME İŞLEMLERİ
     const [roles, setRoles] = useState([]);
+
+    const { currentUser } = useContext(AuthContext);
+    const isAdmin = () => {
+        return currentUser && currentUser.role === "Admin";
+    };
+    const navigate = useNavigate();
 
     useEffect(() => {
         const allRoles = async () => {
@@ -19,6 +27,11 @@ const Roller = () => {
             }
         }
         allRoles();
+
+        if (!isAdmin()) {
+            navigate('/');
+        }
+
     }, []);
 
 

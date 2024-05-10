@@ -1,13 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import axios from "axios";
 import '../assets/table.css'
 import { HiPencilSquare } from "react-icons/hi2";
 import { TiDeleteOutline } from "react-icons/ti";
+import { AuthContext } from '../context/authContext';
 
 const OgretimUyeleri = () => {
 
     //!VERİ ÇEKME İŞLEMLERİ
     const [instructors, setInstructor] = useState([]);
+
+    const { currentUser } = useContext(AuthContext);
+
 
     useEffect(() => {
         const allInstructors = async () => {
@@ -71,8 +75,10 @@ const OgretimUyeleri = () => {
     return (
         <div className='mt-7'>
             <div className='flex gap-x-10 items-center'>
-                <h1 className='font-bold text-2xl'>DERSLER</h1>
-                <button onClick={() => setShowForm(!showForm)} className='border px-3 py-1 bg-green-600 text-gray-50 font-bold rounded-md'>Ders Ekle</button>
+                <h1 className='font-bold text-2xl'>ÖĞRETİM ÜYELERİ</h1>
+                {currentUser.role == "Admin" && (
+                    <button onClick={() => setShowForm(!showForm)} className='border px-3 py-1 bg-green-600 text-gray-50 font-bold rounded-md'>Öğretim Üyesi Ekle</button>
+                )}
             </div>
             <div className='mt-7'>
                 <table>
@@ -81,7 +87,9 @@ const OgretimUyeleri = () => {
                             <th>Akademik Ünvan</th>
                             <th>Öğretim Üyesi Adı</th>
                             <th>Öğretim Üyesi Soyadı</th>
-                            <th>İşlemler</th>
+                            {currentUser.role == "Admin" && (
+                                <th>İşlemler</th>
+                            )}
                         </tr>
                     </thead>
                     <tbody>
@@ -90,12 +98,14 @@ const OgretimUyeleri = () => {
                                 <td>{instructor.academicTitle}</td>
                                 <td>{instructor.instructorFirstName}</td>
                                 <td>{instructor.instructorLastName}</td>
-                                <td>
-                                    <div className='flex'>
-                                        <button onClick={() => handleDelete(instructor.instructorID)} className='pr-4 text-2xl'><TiDeleteOutline /></button>
-                                        <button onClick={() => handleEdit(instructor)} className='text-2xl'> <HiPencilSquare /> </button>
-                                    </div>
-                                </td>
+                                {currentUser.role == "Admin" && (
+                                    <td>
+                                        <div className='flex'>
+                                            <button onClick={() => handleDelete(instructor.instructorID)} className='pr-4 text-2xl'><TiDeleteOutline /></button>
+                                            <button onClick={() => handleEdit(instructor)} className='text-2xl'> <HiPencilSquare /> </button>
+                                        </div>
+                                    </td>
+                                )}
                             </tr>
                         ))}
                     </tbody>

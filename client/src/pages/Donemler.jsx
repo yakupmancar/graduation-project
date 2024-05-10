@@ -1,13 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import axios from "axios";
 import '../assets/table.css'
 import { HiPencilSquare } from "react-icons/hi2";
 import { TiDeleteOutline } from "react-icons/ti";
+import { AuthContext } from '../context/authContext';
 
 const Donemler = () => {
 
   //!VERİ ÇEKME İŞLEMLERİ
   const [semesters, setSemesters] = useState([]);
+
+  const { currentUser } = useContext(AuthContext);
+
 
   useEffect(() => {
     const allSemesters = async () => {
@@ -72,26 +76,32 @@ const Donemler = () => {
     <div className='mt-7'>
       <div className='flex gap-x-10 items-center'>
         <h1 className='font-bold text-2xl'>DÖNEMLER</h1>
-        <button onClick={() => setShowForm(!showForm)} className='border px-3 py-1 bg-green-600 text-gray-50 font-bold rounded-md'>Dönem Ekle</button>
+        {currentUser.role == "Admin" && (
+          <button onClick={() => setShowForm(!showForm)} className='border px-3 py-1 bg-green-600 text-gray-50 font-bold rounded-md'>Dönem Ekle</button>
+        )}
       </div>
       <div className='mt-7'>
         <table>
           <thead>
             <tr>
               <th>Dönem Adı</th>
-              <th>İşlemler</th>
+              {currentUser.role == "Admin" && (
+                <th>İşlemler</th>
+              )}
             </tr>
           </thead>
           <tbody>
             {semesters.map((semester) => (
               <tr key={semester.semesterID}>
                 <td>{semester.semesterName}</td>
-                <td>
-                  <div className='flex'>
-                    <button onClick={() => handleDelete(semester.semesterID)} className='pr-4 text-2xl'><TiDeleteOutline /></button>
-                    <button onClick={() => handleEdit(semester)} className='text-2xl'> <HiPencilSquare /> </button>
-                  </div>
-                </td>
+                {currentUser.role == "Admin" && (
+                  <td>
+                    <div className='flex'>
+                      <button onClick={() => handleDelete(semester.semesterID)} className='pr-4 text-2xl'><TiDeleteOutline /></button>
+                      <button onClick={() => handleEdit(semester)} className='text-2xl'> <HiPencilSquare /> </button>
+                    </div>
+                  </td>
+                )}
               </tr>
             ))}
           </tbody>
