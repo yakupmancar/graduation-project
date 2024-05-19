@@ -10,6 +10,7 @@ import educationRoutes from "./routes/educationRoutes.js"
 import authRoutes from "./routes/authRoutes.js"
 import userRoutes from "./routes/userRoutes.js";
 import roleRoutes from "./routes/roleRoutes.js";
+import courseCalendarRoutes from "./routes/courseCalendarRoutes.js"
 
 
 const app = express();
@@ -31,6 +32,7 @@ app.use("/ogretimler", educationRoutes);
 app.use("/auth", authRoutes);
 app.use("/profil", userRoutes)
 app.use("/roller", roleRoutes);
+app.use("/dersTakvimi", courseCalendarRoutes)
 
 app.listen(port, () => {
     console.log("Connectted.")

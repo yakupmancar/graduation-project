@@ -7,12 +7,36 @@ import { AuthContext } from '../context/authContext';
 
 const Dersler = () => {
 
-    //!VERİ ÇEKME İŞLEMLERİ
+    //! PAGINATION
     const [courses, setCourses] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const pageSize = 5;
+
+    const handlePagination = (data) => {
+        const startIndex = (currentPage - 1) * pageSize;
+        const endIndex = startIndex + pageSize;
+        return data.slice(startIndex, endIndex);
+    };
+    const displayedCourses = handlePagination(courses);
+
+    const handleNextPage = () => {
+        if (currentPage < Math.ceil(courses.length / pageSize)) {
+            setCurrentPage(currentPage + 1);
+        }
+    };
+
+    const handlePreviousPage = () => {
+        if (currentPage > 1) {
+            setCurrentPage(currentPage - 1);
+        }
+    };
+    const totalPages = Math.ceil(courses.length / pageSize);
+
 
     const { currentUser } = useContext(AuthContext);
 
 
+    //!VERİ ÇEKME İŞLEMLERİ
     useEffect(() => {
         const allCourses = async () => {
             try {
@@ -93,7 +117,8 @@ const Dersler = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {courses.map((course) => (
+
+                        {displayedCourses.map((course) => (
                             <tr key={course.courseID}>
                                 <td>{course.courseCode}</td>
                                 <td>{course.courseName}</td>
@@ -128,7 +153,14 @@ const Dersler = () => {
                     </form>
                 )}
             </div>
+
+            <div className="flex justify-center">
+                {currentPage > 1 && <button className='pt-5 mr-auto text-lg font-semibold' onClick={handlePreviousPage}><i class="fa-solid fa-angles-left"></i></button>}
+                {currentPage < totalPages && <button className='pt-5 ml-auto text-lg font-semibold' onClick={handleNextPage}><i class="fa-solid fa-angles-right"></i></button>}
+            </div>
+
         </div>
+
     )
 }
 export default Dersler 

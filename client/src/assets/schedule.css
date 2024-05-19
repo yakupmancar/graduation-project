@@ -1,0 +1,88 @@
+body {
+    font-family: Arial, sans-serif;
+}
+
+.schedule-container {
+    width: 90%;
+    margin: auto;
+}
+
+.schedule-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.schedule-table th,
+.schedule-table td {
+    border: 1px solid #ccc;
+    text-align: center;
+}
+
+.schedule-table th:first-child,
+.schedule-table td:first-child {
+    width: 100px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.schedule-table th:not(:first-child),
+.schedule-table td:not(:first-child) {
+    padding-left: 38px;
+    padding-right: 38px;
+}
+
+.schedule-table td {
+    padding-top: 14px;
+    padding-bottom: 14px;
+}
+
+.schedule-table th {
+    background-color: #f4f4f4;
+    cursor: pointer;
+}
+
+.schedule-table .occupied {
+    background-color: #f8d7da;
+    cursor: pointer;
+    /* Tıklanabilir hücreler */
+}
+
+/* Modal stil ayarları */
+.modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    right: auto;
+    bottom: auto;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
+    background: #f4f4f4;
+    padding: 20px;
+    border-radius: 8px;
+    outline: none;
+    width: 500px;
+    height: 500px;
+}
+
+.modal-overlay {
+    background: #e1e1e1;
+    backdrop-filter: blur(5px);
+}
+
+
+.close-button {
+    position: absolute;
+    top: 7px;
+    color: rgb(233, 19, 19);
+    right: 7px;
+    background: none;
+    border: none;
+    font-size: 18px;
+}
+
+.schedule-item {
+    background-color: #f76c6c;
+    padding: 6px;
+    color: white;
+}

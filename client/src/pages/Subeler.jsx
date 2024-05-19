@@ -8,15 +8,41 @@ import { AuthContext } from '../context/authContext';
 
 
 const Subeler = () => {
+
   const [branches, setBranches] = useState([]);
+
+  //! PAGINATION
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 1;
+
+  const handlePagination = (data) => {
+    const startIndex = (currentPage - 1) * pageSize;
+    const endIndex = startIndex + pageSize;
+    return data.slice(startIndex, endIndex);
+  };
+  const displayedCourses = handlePagination(branches);
+
+  const handleNextPage = () => {
+    if (currentPage < Math.ceil(branches.length / pageSize)) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+  const totalPages = Math.ceil(branches.length / pageSize);
+
+
+  //! STATE
   const [courses, setCourses] = useState([]);
   const [instructors, setInstructors] = useState([]);
   const [educationTypes, setEducationTypes] = useState([]);
-  const [semesters, setSemesters] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState('');
   const [selectedInstructor, setSelectedInstructor] = useState('');
   const [selectedEducationType, setSelectedEducationType] = useState('');
-  const [selectedSemester, setSelectedSemester] = useState('');
 
   const { currentUser } = useContext(AuthContext);
 
@@ -27,17 +53,15 @@ const Subeler = () => {
         const branchRes = await axios.get('http://localhost:8800/subeler');
         setBranches(branchRes.data);
 
-        const courseRes = await axios.get('http://localhost:8800/dersler'); // Replace with your course endpoint
+        const courseRes = await axios.get('http://localhost:8800/dersler');
         setCourses(courseRes.data);
 
-        const instructorRes = await axios.get('http://localhost:8800/ogretimUyeleri'); // Replace with your instructor endpoint
+        const instructorRes = await axios.get('http://localhost:8800/ogretimUyeleri');
         setInstructors(instructorRes.data);
 
-        const educationTypeRes = await axios.get('http://localhost:8800/ogretimler'); // Replace with your education type endpoint
+        const educationTypeRes = await axios.get('http://localhost:8800/ogretimler');
         setEducationTypes(educationTypeRes.data);
 
-        const semesterRes = await axios.get('http://localhost:8800/donemler'); // Replace with your semester endpoint
-        setSemesters(semesterRes.data);
       } catch (error) {
         console.error(error);
       }
@@ -68,7 +92,6 @@ const Subeler = () => {
       fk_instructorID: selectedInstructor,
       studentCount: e.target.studentCount.value,
       fk_educationID: selectedEducationType,
-      fk_semesterID: selectedSemester,
     };
 
     try {
@@ -99,11 +122,7 @@ const Subeler = () => {
     label: educationType.educationType,
   }));
 
-  //DÖNEM BİLGİSİ SELECT KISMI;
-  const semesterOptions = semesters.map((semester) => ({
-    value: semester.semesterID,
-    label: semester.semesterName,
-  }));
+
 
 
   //! SİLME İŞLEMİ;
@@ -146,7 +165,7 @@ const Subeler = () => {
 
       <div className='mt-5'>
 
-        {currentUser.role == "Admin" && (
+        {currentUser.role === "Admin" && currentPage === 1 && (
           <form className='bg-[#e1e1e1] py-5 px-7 rounded-xl' onSubmit={handleSubmit}>
             <div className='flex gap-x-28'>
               <div className='flex flex-col gap-y-5 '>
@@ -194,22 +213,13 @@ const Subeler = () => {
                   />
                 </div>
 
-                <div className='flex items-center'>
-                  <label className='pr-2 text-gray-600 font-bold text-[17px]' htmlFor='semester'>Dönem Bilgisi:</label> <br />
-                  <Select className='w-64'
-                    options={semesterOptions}
-                    value={semesterOptions.find((option) => option.value === selectedSemester)}
-                    onChange={(selectedOption) => setSelectedSemester(selectedOption.value)}
-                    placeholder="Dönem bilgisi seçiniz..."
-                    isSearchable={true}
-                  />
-                </div>
+                <button type='submit' className='border py-2 mx-20 mt-1 bg-green-600 text-gray-50 font-bold rounded-md'>
+                  Ekle
+                </button>
               </div>
 
             </div>
-            <button type='submit' className='border px-3 py-1 mt-4 bg-green-600 text-gray-50 font-bold rounded-md'>
-              Ekle
-            </button>
+
           </form>
         )}
 
@@ -221,21 +231,19 @@ const Subeler = () => {
               <th>Öğretim Üyesi</th>
               <th>Öğrenci Sayısı</th>
               <th>Öğretim Bilgisi</th>
-              <th>Dönem Bilgisi</th>
               {currentUser.role == "Admin" && (
                 <th>İşlemler</th>
               )}
             </tr>
           </thead>
           <tbody>
-            {branches.map((branch) => (
+            {displayedCourses.map((branch) => (
               <tr key={branch.branchID}>
                 <td>{branch.branchName}</td>
                 <td>{branch.courseName}</td>
                 <td>{branch.instructorFirstName} {branch.instructorLastName}</td>
                 <td>{branch.studentCount}</td>
                 <td>{branch.educationType}</td>
-                <td>{branch.semesterName}</td>
                 {currentUser.role == "Admin" && (
                   <td>
                     <div className='flex'>
@@ -255,6 +263,11 @@ const Subeler = () => {
             <button className='pl-4 font-semibold underline' type="submit">Güncelle</button>
           </form>
         )}
+      </div>
+
+      <div className="flex justify-center">
+        {currentPage > 1 && <button className='pt-5 mr-auto text-lg font-semibold' onClick={handlePreviousPage}><i class="fa-solid fa-angles-left"></i></button>}
+        {currentPage < totalPages && <button className='pt-5 ml-auto text-lg font-semibold' onClick={handleNextPage}><i class="fa-solid fa-angles-right"></i></button>}
       </div>
     </div >
   );

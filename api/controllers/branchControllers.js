@@ -8,13 +8,11 @@ export const getAllBranches = (req, res) => {
             courses.courseName, 
             instructors.instructorFirstName, 
             instructors.instructorLastName, 
-            educationtype.educationType, 
-            semester.semesterName 
+            educationtype.educationType
         FROM branches 
         JOIN courses ON branches.fk_courseID = courses.courseID
         JOIN instructors ON branches.fk_instructorID = instructors.instructorID
         JOIN educationtype ON branches.fk_educationID = educationtype.educationID
-        JOIN semester ON branches.fk_semesterID = semester.semesterID
     `;
     db.query(q, (err, data) => {
         if (err) return res.json(err);
@@ -25,9 +23,9 @@ export const getAllBranches = (req, res) => {
 
 // ! ŞUBE EKLE;
 export const addBranch = (req, res) => {
-    const { branchName, fk_courseID, fk_instructorID, studentCount, fk_educationID, fk_semesterID } = req.body;
-    const q = "INSERT INTO branches (branchName, fk_courseID, fk_instructorID, studentCount, fk_educationID, fk_semesterID) VALUES (?, ?, ?, ?, ?, ?);"
-    db.query(q, [branchName, fk_courseID, fk_instructorID, studentCount, fk_educationID, fk_semesterID], (err, data) => {
+    const { branchName, fk_courseID, fk_instructorID, studentCount, fk_educationID } = req.body;
+    const q = "INSERT INTO branches (branchName, fk_courseID, fk_instructorID, studentCount, fk_educationID) VALUES (?, ?, ?, ?, ?);"
+    db.query(q, [branchName, fk_courseID, fk_instructorID, studentCount, fk_educationID], (err, data) => {
         if (err) return res.status(500).json(err);
         return res.json("Yeni şube eklendi");
     });
