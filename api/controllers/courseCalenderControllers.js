@@ -2,29 +2,32 @@ import db from "../db.js";
 
 export const getCourseCalendar = (req, res) => {
   const q = `
-    SELECT 
-      coursecalendar.courseCalendarID,
-      coursecalendar.fk_semesterID,
-      coursecalendar.fk_branchID,
-      coursecalendar.fk_classroomID,
-      coursecalendar.courseDay,
-      coursecalendar.startTime,
-      coursecalendar.endTime,
-      branches.branchName,
-      courses.courseName,
-      courses.gradeLevel,
-      classrooms.classroomName,
-      CONCAT(instructors.instructorFirstName, ' ', instructors.instructorLastName) AS instructorName
-    FROM 
-      coursecalendar
-    JOIN 
-      branches ON coursecalendar.fk_branchID = branches.branchID
-    JOIN 
-      courses ON branches.fk_courseID = courses.courseID
-    JOIN 
-      classrooms ON coursecalendar.fk_classroomID = classrooms.classroomID
-    JOIN 
-      instructors ON branches.fk_instructorID = instructors.instructorID
+  SELECT 
+  coursecalendar.courseCalendarID,
+  coursecalendar.fk_semesterID,
+  coursecalendar.fk_branchID,
+  coursecalendar.fk_classroomID,
+  coursecalendar.courseDay,
+  coursecalendar.startTime,
+  coursecalendar.endTime,
+  branches.branchName,
+  branches.fk_instructorID as instructorID,
+  branches.fk_educationID,
+  courses.courseName,
+  courses.gradeLevel,
+  classrooms.classroomName,
+  CONCAT(instructors.instructorFirstName, ' ', instructors.instructorLastName) AS instructorName
+FROM 
+  coursecalendar
+JOIN 
+  branches ON coursecalendar.fk_branchID = branches.branchID
+JOIN 
+  courses ON branches.fk_courseID = courses.courseID
+JOIN 
+  classrooms ON coursecalendar.fk_classroomID = classrooms.classroomID
+JOIN 
+  instructors ON branches.fk_instructorID = instructors.instructorID
+
   `;
   db.query(q, (err, data) => {
     if (err) return res.status(500).json(err);
@@ -58,5 +61,17 @@ export const deleteCourseCalendar = (req, res) => {
   db.query(q, [courseCalendarId], (err, data) => {
     if (err) return res.status(500).json(err);
     return res.json("Ders Takvimi Silindi");
+  });
+};
+
+
+//! DERS TAKVİMİ GÜNCELLE
+export const updateCourseCalendar = (req, res) => {
+  const courseCalendarId = req.params.id;
+  const { fk_classroomID, courseDay, startTime, endTime } = req.body;
+  const q = "UPDATE courseCalendar SET fk_classroomID = ?, courseDay = ?, startTime = ?, endTime = ? WHERE `courseCalendarID` = ?";
+  db.query(q, [fk_classroomID, courseDay, startTime, endTime, courseCalendarId], (err, data) => {
+    if (err) return res.status(500).json(err);
+    return res.json("Ders Takvimi güncellendi.");
   });
 };

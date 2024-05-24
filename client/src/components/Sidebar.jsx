@@ -27,9 +27,9 @@ const Sidebar = () => {
         setIsChecked(!isChecked);
     };
 
-    const [activeLink, setActiveLink] = useState(""); // State for active link
+    const [activeLink, setActiveLink] = useState("");
     const handleActiveLink = (path) => {
-        setActiveLink(path); // Update active link on click
+        setActiveLink(path);
     };
 
     return (
@@ -110,11 +110,10 @@ const Sidebar = () => {
                     <span className={`${isChecked ? 'hidden' : ''}`}>Gözetmen Üyeler</span>
                 </Link>
 
-                {currentUser.role == "Admin" && (
+                {currentUser && currentUser.role === "Admin" && (
                     <Link to="/roller" className={`flex gap-x-2 px-3 ${activeLink === "/roller" ? "active" : ""}`} onClick={() => handleActiveLink("/roller")}>
                         <span className='text-xl'>
                             <FaCriticalRole />
-
                         </span>
                         <span className={`${isChecked ? 'hidden' : ''}`}>Roller</span>
                     </Link>

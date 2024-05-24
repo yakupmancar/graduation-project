@@ -1,15 +1,18 @@
 import express from "express";
-import { addCourseCalendar, deleteCourseCalendar, getCourseCalendar } from "../controllers/courseCalenderControllers.js";
+import { addCourseCalendar, deleteCourseCalendar, getCourseCalendar, updateCourseCalendar } from "../controllers/courseCalenderControllers.js";
 
 const router = express.Router();
 
-// Verileri Getir;
+// VEİ GETİR;
 router.get("/", getCourseCalendar);
 
-// Veri Ekle;
+// VERİ EKLE;
 router.post("/", addCourseCalendar);
 
-//Veri Sil;
-router.delete("/:id", deleteCourseCalendar)
+// VERİ SİL;
+router.delete("/:id", deleteCourseCalendar);
+
+//VERİ GÜNCELLE;
+router.put("/:id", updateCourseCalendar);
 
 export default router;
