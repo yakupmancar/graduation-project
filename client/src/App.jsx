@@ -5,7 +5,8 @@ import {
   Link,
   Outlet,
 } from "react-router-dom";
-import Footer from "./components/Footer";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Navbar from "./components/Navbar";
 import Sidebar from "./components/Sidebar";
 import Login from "./pages/Login";
@@ -15,7 +16,8 @@ import Donemler from "./pages/Donemler";
 import Dersler from "./pages/Dersler";
 import Derslikler from "./pages/Derslikler";
 import Subeler from "./pages/Subeler";
-import DersTakvimi from "./pages/DersTakvimi";
+import DersTakvimi1 from "./pages/DersTakvimi1.jsx";
+import DersTakvimi2 from "./pages/DersTakvimi2.jsx";
 import SinavTakvimi from "./pages/SinavTakvimi";
 import OgretimUyeleri from "./pages/OgretimUyeleri";
 import GozetmenUyeler from "./pages/GozetmenUyeler";
@@ -61,8 +63,12 @@ const router = createBrowserRouter([
         element: <Subeler />
       },
       {
-        path: "/dersTakvimi",
-        element: <DersTakvimi />
+        path: "/dersTakvimi1",
+        element: <DersTakvimi1 />
+      },
+      {
+        path: "/dersTakvimi2",
+        element: <DersTakvimi2 />
       },
       {
         path: "/sinavTakvimi",
@@ -99,6 +105,7 @@ function App() {
 
   return (
     <div>
+      <ToastContainer />
       <RouterProvider router={router} />
     </div>
   )

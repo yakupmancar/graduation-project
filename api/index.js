@@ -32,7 +32,8 @@ app.use("/ogretimler", educationRoutes);
 app.use("/auth", authRoutes);
 app.use("/profil", userRoutes)
 app.use("/roller", roleRoutes);
-app.use("/dersTakvimi", courseCalendarRoutes)
+app.use("/dersTakvimi1", courseCalendarRoutes);
+app.use("/dersTakvimi2", courseCalendarRoutes);
 
 app.listen(port, () => {
     console.log("Connectted.")

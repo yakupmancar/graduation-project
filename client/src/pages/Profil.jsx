@@ -2,6 +2,8 @@ import React, { useContext, useEffect, useState } from 'react';
 import { AuthContext } from "../context/authContext.jsx";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Profile = () => {
   const { currentUser } = useContext(AuthContext);
@@ -11,7 +13,7 @@ const Profile = () => {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
-  
+
 
   const navigate = useNavigate();
 
@@ -55,12 +57,12 @@ const Profile = () => {
 
   const handlePasswordUpdate = async () => {
     if (!currentPassword || !newPassword || !confirmNewPassword) {
-      alert("Lütfen tüm alanları doldurun!");
+      toast.error("Lütfen tüm alanları doldurun!");
       return;
     }
 
     if (newPassword !== confirmNewPassword) {
-      alert("Yeni şifreler eşleşmiyor!");
+      toast.error("Yeni şifreler eşleşmiyor!");
       return;
     }
 
@@ -70,9 +72,9 @@ const Profile = () => {
         setCurrentPassword("");
         setNewPassword("");
         setConfirmNewPassword("");
-        alert("Şifre başarıyla güncellendi!");
+        toast.success("Şifre Başarıyla Güncellendi!");
       } else {
-        alert("Mevcut şifre yanlış!");
+        toast.error("Mevcut Şifre Yanlış!");
       }
     } catch (error) {
       console.log(error);

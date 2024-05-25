@@ -5,6 +5,8 @@ import { HiPencilSquare } from "react-icons/hi2";
 import { TiDeleteOutline } from "react-icons/ti";
 import { AuthContext } from '../context/authContext';
 import { useNavigate } from 'react-router-dom';
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
 
 const Roller = () => {
 
@@ -69,17 +71,28 @@ const Roller = () => {
 
     //!SİLME İŞLEMİ;
     const handleDelete = async (id) => {
-        const userConfirmed = window.confirm("Bu Rolü silmek istediğinize emin misiniz?");
-        if (userConfirmed) {
-            try {
-                await axios.delete("http://localhost:8800/roller/" + id);
-                window.location.reload();
-            } catch (error) {
-                console.log(error);
-            }
-        }
-    }
-
+        confirmAlert({
+            title: 'Onay',
+            message: 'Bu Rolü silmek istediğinize emin misiniz?',
+            buttons: [
+                {
+                    label: 'Evet',
+                    onClick: async () => {
+                        try {
+                            await axios.delete('http://localhost:8800/roller/' + id);
+                            window.location.reload();
+                        } catch (error) {
+                            console.log(error);
+                        }
+                    }
+                },
+                {
+                    label: 'Hayır',
+                    onClick: () => { }
+                }
+            ]
+        });
+    };
 
     return (
         <div className='mt-7'>

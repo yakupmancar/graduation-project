@@ -4,6 +4,9 @@ import '../assets/table.css'
 import { HiPencilSquare } from "react-icons/hi2";
 import { TiDeleteOutline } from "react-icons/ti";
 import { AuthContext } from '../context/authContext';
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
+
 
 const OgretimUyeleri = () => {
 
@@ -60,17 +63,28 @@ const OgretimUyeleri = () => {
 
     //!SİLME İŞLEMİ;
     const handleDelete = async (id) => {
-        const userConfirmed = window.confirm("Bu Öğretim Üyesini silmek istediğinize emin misiniz?");
-        if (userConfirmed) {
-            try {
-                await axios.delete("http://localhost:8800/ogretimUyeleri/" + id);
-                window.location.reload();
-            } catch (error) {
-                console.log(error);
-            }
-        }
-    }
-
+        confirmAlert({
+            title: 'Onay',
+            message: 'Bu Öğretim Üyesini silmek istediğinize emin misiniz?',
+            buttons: [
+                {
+                    label: 'Evet',
+                    onClick: async () => {
+                        try {
+                            await axios.delete('http://localhost:8800/ogretimUyeleri/' + id);
+                            window.location.reload();
+                        } catch (error) {
+                            console.log(error);
+                        }
+                    }
+                },
+                {
+                    label: 'Hayır',
+                    onClick: () => { }
+                }
+            ]
+        });
+    };
 
     return (
         <div className='mt-7'>

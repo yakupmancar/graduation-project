@@ -81,12 +81,21 @@ const Sidebar = () => {
                     <span className={`${isChecked ? 'hidden' : ''}`}>Şubeler</span>
                 </Link>
 
-                <Link to="/dersTakvimi" className={`flex gap-x-2 px-3 ${activeLink === "/dersTakvimi" ? "active" : ""}`} onClick={() => handleActiveLink("/dersTakvimi")}>
+                <Link to="/dersTakvimi1" className={`flex gap-x-2 px-3 ${activeLink === "/dersTakvimi1" ? "active" : ""}`} onClick={() => handleActiveLink("/dersTakvimi1")}>
                     <span className='text-xl'>
                         <VscCalendar />
                     </span>
-                    <span className={`${isChecked ? 'hidden' : ''}`}>Ders Takvimi</span>
+                    <span className={`${isChecked ? 'hidden' : ''}`}>1.Öğretim Takvimi</span>
                 </Link>
+
+                <Link to="/dersTakvimi2" className={`flex gap-x-2 px-3 ${activeLink === "/dersTakvimi2" ? "active" : ""}`} onClick={() => handleActiveLink("/dersTakvimi2")}>
+                    <span className='text-xl'>
+                        <VscCalendar />
+                    </span>
+                    <span className={`${isChecked ? 'hidden' : ''}`}>2.Öğretim Takvimi</span>
+                </Link>
+
+
                 <Link to="/sinavTakvimi" className={`flex gap-x-2 px-3 ${activeLink === "/sinavTakvimi" ? "active" : ""}`} onClick={() => handleActiveLink("/sinavTakvimi")}>
                     <span className='text-xl'>
                         <MdOutlineCalendarMonth />

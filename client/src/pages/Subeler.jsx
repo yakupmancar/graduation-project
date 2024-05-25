@@ -5,6 +5,10 @@ import { HiPencilSquare } from 'react-icons/hi2';
 import { TiDeleteOutline } from 'react-icons/ti';
 import Select from 'react-select';
 import { AuthContext } from '../context/authContext';
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 const Subeler = () => {
@@ -13,7 +17,7 @@ const Subeler = () => {
 
   //! PAGINATION
   const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 1;
+  const pageSize = 8;
 
   const handlePagination = (data) => {
     const startIndex = (currentPage - 1) * pageSize;
@@ -82,7 +86,7 @@ const Subeler = () => {
     );
 
     if (existingBranch) {
-      alert("Aynı ders ve öğretim bilgisi için aynı şube adı tekrar eklenemez!");
+      toast.error("Aynı ders ve öğretim bilgisi için aynı şube adı tekrar eklenemez!");
       return;
     }
 
@@ -127,15 +131,27 @@ const Subeler = () => {
 
   //! SİLME İŞLEMİ;
   const handleDelete = async (id) => {
-    const userConfirmed = window.confirm('Bu şubeyi silmek istediğinize emin misiniz?');
-    if (userConfirmed) {
-      try {
-        await axios.delete('http://localhost:8800/subeler/' + id);
-        window.location.reload();
-      } catch (error) {
-        console.log(error);
-      }
-    }
+    confirmAlert({
+      title: 'Onay',
+      message: 'Bu şubeyi silmek istediğinize emin misiniz?',
+      buttons: [
+        {
+          label: 'Evet',
+          onClick: async () => {
+            try {
+              await axios.delete('http://localhost:8800/subeler/' + id);
+              window.location.reload();
+            } catch (error) {
+              console.log(error);
+            }
+          }
+        },
+        {
+          label: 'Hayır',
+          onClick: () => { }
+        }
+      ]
+    });
   };
 
 
