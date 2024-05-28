@@ -4,6 +4,9 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
+
 
 const Profile = () => {
   const { currentUser } = useContext(AuthContext);
@@ -84,17 +87,29 @@ const Profile = () => {
 
 
   //! Silme İşlemi;
-  const handleDelete = async () => {
-    const userConfirmed = window.confirm("Hesabınızı silmek istediğinize emin misiniz?");
 
-    if (userConfirmed) {
-      try {
-        await axios.delete("http://localhost:8800/profil/" + currentUser.userID);
-        navigate("/login")
-      } catch (error) {
-        console.log(error);
-      }
-    }
+  const handleDelete = async () => {
+    confirmAlert({
+      title: 'Onay',
+      message: 'Hesabınızı silmek istediğinize emin misiniz?',
+      buttons: [
+        {
+          label: 'Evet',
+          onClick: async () => {
+            try {
+              await axios.delete("http://localhost:8800/profil/" + currentUser.userID);
+              navigate("/login")
+            } catch (error) {
+              console.log(error);
+            }
+          }
+        },
+        {
+          label: 'Hayır',
+          onClick: () => { }
+        }
+      ]
+    });
   };
 
   //! BUTON GÖRÜNÜMÜ İŞLEMİ;

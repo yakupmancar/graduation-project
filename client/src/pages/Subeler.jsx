@@ -17,14 +17,14 @@ const Subeler = () => {
 
   //! PAGINATION
   const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 8;
+  const pageSize = 5;
 
   const handlePagination = (data) => {
     const startIndex = (currentPage - 1) * pageSize;
     const endIndex = startIndex + pageSize;
     return data.slice(startIndex, endIndex);
   };
-  const displayedCourses = handlePagination(branches);
+  const displayedBranches = handlePagination(branches);
 
   const handleNextPage = () => {
     if (currentPage < Math.ceil(branches.length / pageSize)) {
@@ -253,7 +253,7 @@ const Subeler = () => {
             </tr>
           </thead>
           <tbody>
-            {displayedCourses.map((branch) => (
+            {displayedBranches.map((branch) => (
               <tr key={branch.branchID}>
                 <td>{branch.branchName}</td>
                 <td>{branch.courseName}</td>
@@ -281,10 +281,26 @@ const Subeler = () => {
         )}
       </div>
 
-      <div className="flex justify-center">
-        {currentPage > 1 && <button className='pt-5 mr-auto text-lg font-semibold' onClick={handlePreviousPage}><i class="fa-solid fa-angles-left"></i></button>}
-        {currentPage < totalPages && <button className='pt-5 ml-auto text-lg font-semibold' onClick={handleNextPage}><i class="fa-solid fa-angles-right"></i></button>}
+      {/* //! PAGINATE */}
+      <div className="flex justify-center gap-x-3 pt-12">
+        {currentPage > 1 && (
+          <button className='' onClick={handlePreviousPage}>
+            <i class="fa-solid fa-angle-left"></i>
+          </button>
+        )}
+        {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNumber) => (
+          <button key={pageNumber} className={`border border-gray-400 px-2 rounded-full ${pageNumber === currentPage ? 'text-black font-bold border-2 border-gray-600' : ''}`}
+            onClick={() => setCurrentPage(pageNumber)}>
+            {pageNumber}
+          </button>
+        ))}
+        {currentPage < totalPages && (
+          <button className='' onClick={handleNextPage} >
+            <i class="fa-solid fa-angle-right"></i>
+          </button>
+        )}
       </div>
+
     </div >
   );
 };

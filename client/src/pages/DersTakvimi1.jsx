@@ -386,6 +386,11 @@ const DersTakvimi1 = () => {
           onChange={(selectedOption) => setGradeLevel(selectedOption.value)}
           options={gradeLevelOptions}
         />
+
+        <button className='flex gap-x-2 items-center border-2 px-2 rounded border-[#A8AEB8] ml-auto mr-10'>
+          <i class="fa-solid fa-download"></i>
+          <span>Programı İndir (.xlsx)</span>
+        </button>
       </div>
 
       <table className="schedule-table">

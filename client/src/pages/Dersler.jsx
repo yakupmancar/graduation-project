@@ -9,8 +9,9 @@ import 'react-confirm-alert/src/react-confirm-alert.css';
 
 const Dersler = () => {
 
-    //! PAGINATION
     const [courses, setCourses] = useState([]);
+
+    //! PAGINATION
     const [currentPage, setCurrentPage] = useState(1);
     const pageSize = 5;
 
@@ -117,7 +118,7 @@ const Dersler = () => {
                     <button onClick={() => setShowForm(!showForm)} className='border px-3 py-1 bg-green-600 text-gray-50 font-bold rounded-md'>Ders Ekle</button>
                 )}
             </div>
-            <div className='mt-7'>
+            <div className='mt-7 schedule-container'>
                 <table>
                     <thead>
                         <tr>
@@ -167,9 +168,24 @@ const Dersler = () => {
                 )}
             </div>
 
-            <div className="flex justify-center">
-                {currentPage > 1 && <button className='pt-5 mr-auto text-lg font-semibold' onClick={handlePreviousPage}><i class="fa-solid fa-angles-left"></i></button>}
-                {currentPage < totalPages && <button className='pt-5 ml-auto text-lg font-semibold' onClick={handleNextPage}><i class="fa-solid fa-angles-right"></i></button>}
+            {/* //! PAGINATE */}
+            <div className="flex justify-center gap-x-3 pt-10">
+                {currentPage > 1 && (
+                    <button className='' onClick={handlePreviousPage}>
+                        <i class="fa-solid fa-angle-left"></i>
+                    </button>
+                )}
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNumber) => (
+                    <button key={pageNumber} className={`border border-gray-400 px-2 rounded-full ${pageNumber === currentPage ? 'text-black font-bold border-2 border-gray-600' : ''}`}
+                        onClick={() => setCurrentPage(pageNumber)}>
+                        {pageNumber}
+                    </button>
+                ))}
+                {currentPage < totalPages && (
+                    <button className='' onClick={handleNextPage} >
+                        <i class="fa-solid fa-angle-right"></i>
+                    </button>
+                )}
             </div>
 
         </div>
