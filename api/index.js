@@ -11,6 +11,7 @@ import authRoutes from "./routes/authRoutes.js"
 import userRoutes from "./routes/userRoutes.js";
 import roleRoutes from "./routes/roleRoutes.js";
 import courseCalendarRoutes from "./routes/courseCalendarRoutes.js"
+import examCalendarRoutes from "./routes/examCalendarRoutes.js";
 
 
 const app = express();
@@ -34,6 +35,7 @@ app.use("/profil", userRoutes)
 app.use("/roller", roleRoutes);
 app.use("/dersTakvimi1", courseCalendarRoutes);
 app.use("/dersTakvimi2", courseCalendarRoutes);
+app.use("/sinavTakvimi", examCalendarRoutes);
 
 app.listen(port, () => {
     console.log("Connectted.")

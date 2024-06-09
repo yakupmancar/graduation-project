@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import axios from "axios";
 import '../assets/table.css';
-
 import { HiPencilSquare } from "react-icons/hi2";
 import { TiDeleteOutline } from "react-icons/ti";
 import { AuthContext } from '../context/authContext';

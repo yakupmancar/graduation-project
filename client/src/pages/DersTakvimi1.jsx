@@ -370,6 +370,26 @@ const DersTakvimi1 = () => {
     }
   };
 
+
+  const handleExportExcel = async () => {
+    try {
+      const response = await axios.get('http://localhost:8800/dersTakvimi1/exportExcel/1', {
+        responseType: 'blob',
+      });
+
+      const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', '1.ogretim_ders_programi.xlsx');
+      document.body.appendChild(link);
+      link.click();
+      link.parentNode.removeChild(link);
+    } catch (error) {
+      console.error('Excel dosyası indirilirken hata oluştu:', error);
+    }
+  };
+
   return (
     <div className="schedule-container my-6 ml-[-10px] mr-2">
 
@@ -387,9 +407,9 @@ const DersTakvimi1 = () => {
           options={gradeLevelOptions}
         />
 
-        <button className='flex gap-x-2 items-center border-2 px-2 rounded border-[#A8AEB8] ml-auto mr-10'>
+        <button onClick={handleExportExcel} className='flex gap-x-2 items-center border-2 px-2 rounded border-[#A8AEB8] ml-auto mr-10'>
           <i class="fa-solid fa-download"></i>
-          <span>Programı İndir (.xlsx)</span>
+          <span>1.öğretim Ders Takvimini İndir (.xlsx)</span>
         </button>
       </div>
 

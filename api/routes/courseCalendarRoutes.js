@@ -1,9 +1,9 @@
 import express from "express";
-import { addCourseCalendar, deleteCourseCalendar, getCourseCalendar, updateCourseCalendar } from "../controllers/courseCalenderControllers.js";
+import { addCourseCalendar, deleteCourseCalendar, exportExcel, getCourseCalendar, updateCourseCalendar } from "../controllers/courseCalenderControllers.js";
 
 const router = express.Router();
 
-// VEİ GETİR;
+// VERİ GETİR;
 router.get("/", getCourseCalendar);
 
 // VERİ EKLE;
@@ -14,5 +14,8 @@ router.delete("/:id", deleteCourseCalendar);
 
 //VERİ GÜNCELLE;
 router.put("/:id", updateCourseCalendar);
+
+// Excel Çıktısı;
+router.get("/exportExcel/:educationID", exportExcel);
 
 export default router;
