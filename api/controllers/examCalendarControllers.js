@@ -65,28 +65,71 @@ export const addExamCalendar = (req, res) => {
     return res.status(400).json({ message: "Eksik veya hatalı veri gönderildi." });
   }
 
-  const q = "INSERT INTO examCalendar (fk_semesterID, fk_branchID, fk_invigilatorID, examDate, startTime) VALUES (?, ?, ?, ?, ?)";
-  db.query(q, [fk_semesterID, fk_branchID, fk_invigilatorID, examDate, startTime], (err, data) => {
-    if (err) {
-      console.error("Veritabanına ekleme sırasında hata:", err);
-      return res.status(500).json({ message: "Veritabanına ekleme sırasında hata oluştu." });
+  // Aynı gün ve saatte aynı gözetmen üyeye sınav vermeme kontrolü.
+  const qCheck = "SELECT * FROM examCalendar WHERE fk_invigilatorID = ? AND examDate = ? AND startTime = ?";
+  db.query(qCheck, [fk_invigilatorID, examDate, startTime], (errCheck, dataCheck) => {
+    if (errCheck) {
+      console.error("Veritabanında kontrol sırasında hata:", errCheck);
+      return res.status(500).json({ message: "Veritabanında kontrol sırasında hata oluştu." });
     }
 
-    const examCalendarID = data.insertId;
-    fk_classroomIDs.forEach((classroomID) => {
-      const q2 = "INSERT INTO examClassrooms (fk_classroomID, fk_examCalendarID) VALUES (?, ?)";
-      db.query(q2, [classroomID, examCalendarID], (err2, data2) => {
-        if (err2) {
-          console.error("Tabloya ekleme sırasında hata:", err2);
-          return res.status(500).json({ message: "Tabloya ekleme sırasında hata oluştu." });
+    if (dataCheck.length > 0) {
+      return res.status(400).json({ message: "Gözetmen üye aynı gün ve saatte başka bir sınavda görevli." });
+    }
+
+    // Aynı gün ve saatte aynı dersliklerin kullanılıp kullanılmadığını kontrol et
+    const qCheckClassroom = `
+      SELECT examCalendar.examCalendarID 
+      FROM examCalendar 
+      JOIN examClassrooms ON examCalendar.examCalendarID = examClassrooms.fk_examCalendarID 
+      WHERE examCalendar.examDate = ? AND examCalendar.startTime = ? AND examClassrooms.fk_classroomID IN (?)`;
+    db.query(qCheckClassroom, [examDate, startTime, fk_classroomIDs], (errCheckClassroom, dataCheckClassroom) => {
+      if (errCheckClassroom) {
+        console.error("Veritabanında kontrol sırasında hata:", errCheckClassroom);
+        return res.status(500).json({ message: "Veritabanında kontrol sırasında hata oluştu." });
+      }
+
+      if (dataCheckClassroom.length > 0) {
+        return res.status(400).json({ message: "Bu derslik(ler) aynı gün ve saatte başka bir sınavda kullanılıyor." });
+      }
+
+      // Aynı gün ve saatte aynı şubenin sınavının olup olmadığını kontrol et
+      const qCheckBranch = "SELECT * FROM examCalendar WHERE fk_branchID = ? AND examDate = ? AND startTime = ?";
+      db.query(qCheckBranch, [fk_branchID, examDate, startTime], (errCheckBranch, dataCheckBranch) => {
+        if (errCheckBranch) {
+          console.error("Veritabanında kontrol sırasında hata:", errCheckBranch);
+          return res.status(500).json({ message: "Veritabanında kontrol sırasında hata oluştu." });
         }
+
+        if (dataCheckBranch.length > 0) {
+          return res.status(400).json({ message: "Bu şubenin aynı gün ve saatte başka bir sınavı mevcut" });
+        }
+
+        // Sınavı ekle
+        const q = "INSERT INTO examCalendar (fk_semesterID, fk_branchID, fk_invigilatorID, examDate, startTime) VALUES (?, ?, ?, ?, ?)";
+        db.query(q, [fk_semesterID, fk_branchID, fk_invigilatorID, examDate, startTime], (err, data) => {
+          if (err) {
+            console.error("Veritabanına ekleme sırasında hata:", err);
+            return res.status(500).json({ message: "Veritabanına ekleme sırasında hata oluştu." });
+          }
+
+          const examCalendarID = data.insertId;
+          fk_classroomIDs.forEach((classroomID) => {
+            const q2 = "INSERT INTO examClassrooms (fk_classroomID, fk_examCalendarID) VALUES (?, ?)";
+            db.query(q2, [classroomID, examCalendarID], (err2, data2) => {
+              if (err2) {
+                console.error("Tabloya ekleme sırasında hata:", err2);
+                return res.status(500).json({ message: "Tabloya ekleme sırasında hata oluştu." });
+              }
+            });
+          });
+
+          return res.json("Sınav takvimi ve derslikler başarıyla eklendi.");
+        });
       });
     });
-
-    return res.json("Sınav takvimi ve derslikler başarıyla eklendi.");
   });
 };
-
 
 
 
@@ -95,7 +138,7 @@ export const deleteExamCalendar = (req, res) => {
   const examCalendarId = req.params.id;
 
   // Önce EXAMCLASSROOMS tablosundaki ilgili girişleri sil
-  const q1 = "DELETE FROM EXAMCLASSROOMS WHERE fk_examCalendarID = ?";
+  const q1 = "DELETE FROM examClassrooms WHERE fk_examCalendarID = ?";
   db.query(q1, [examCalendarId], (err, data) => {
     if (err) return res.status(500).json(err);
 
@@ -119,33 +162,66 @@ export const updateExamCalendar = (req, res) => {
     return res.status(400).json({ message: "Eksik veya hatalı veri gönderildi." });
   }
 
-  const q = "UPDATE examCalendar SET examDate = ?, startTime = ?, fk_invigilatorID = ? WHERE `examCalendarID` = ?";
-  db.query(q, [examDate, startTime, fk_invigilatorID, examCalendarId], (err, data) => {
-    if (err) {
-      console.error("Error during update:", err);
-      return res.status(500).json({ message: "Veritabanı güncelleme sırasında hata oluştu." });
+  // Aynı gün ve saatte başka bir sınavın olup olmadığını kontrol et
+  const qCheck = "SELECT * FROM examCalendar WHERE fk_invigilatorID = ? AND examDate = ? AND startTime = ? AND examCalendarID != ?";
+  db.query(qCheck, [fk_invigilatorID, examDate, startTime, examCalendarId], (errCheck, dataCheck) => {
+    if (errCheck) {
+      console.error("Veritabanında kontrol sırasında hata:", errCheck);
+      return res.status(500).json({ message: "Veritabanında kontrol sırasında hata oluştu." });
     }
 
-    const q2 = "DELETE FROM examClassrooms WHERE fk_examCalendarID = ?";
-    db.query(q2, [examCalendarId], (err2, data2) => {
-      if (err2) {
-        console.error("Error during examClassrooms deletion:", err2);
-        return res.status(500).json({ message: "Sınav dersliklerini silme sırasında hata oluştu." });
+    if (dataCheck.length > 0) {
+      return res.status(400).json({ message: "Gözetmen üye aynı gün ve saatte başka bir sınavda görevli." });
+    }
+
+    // Aynı gün ve saatte aynı dersliklerin kullanılıp kullanılmadığını kontrol et
+    const qCheckClassroom = `
+      SELECT examCalendar.examCalendarID 
+      FROM examCalendar 
+      JOIN examClassrooms ON examCalendar.examCalendarID = examClassrooms.fk_examCalendarID 
+      WHERE examCalendar.examDate = ? AND examCalendar.startTime = ? AND examClassrooms.fk_classroomID IN (?) AND examCalendar.examCalendarID != ?`;
+    db.query(qCheckClassroom, [examDate, startTime, fk_classroomIDs, examCalendarId], (errCheckClassroom, dataCheckClassroom) => {
+      if (errCheckClassroom) {
+        console.error("Veritabanında kontrol sırasında hata:", errCheckClassroom);
+        return res.status(500).json({ message: "Veritabanında kontrol sırasında hata oluştu." });
       }
 
-      fk_classroomIDs.forEach((classroomID) => {
-        const q3 = "INSERT INTO examClassrooms (fk_classroomID, fk_examCalendarID) VALUES (?, ?)";
-        db.query(q3, [classroomID, examCalendarId], (err3, data3) => {
-          if (err3) {
-            console.error("Tabloya ekleme sırasında hata:", err3);
-            return res.status(500).json({ message: "Tabloya ekleme sırasında hata oluştu." });
+      if (dataCheckClassroom.length > 0) {
+        return res.status(400).json({ message: "Bu derslik(ler) aynı gün ve saatte başka bir sınavda kullanılıyor." });
+      }
+
+      // Sınavı güncelle
+      const q = "UPDATE examCalendar SET examDate = ?, startTime = ?, fk_invigilatorID = ? WHERE `examCalendarID` = ?";
+      db.query(q, [examDate, startTime, fk_invigilatorID, examCalendarId], (err, data) => {
+        if (err) {
+          console.error("Error during update:", err);
+          return res.status(500).json({ message: "Veritabanı güncelleme sırasında hata oluştu." });
+        }
+
+        const q2 = "DELETE FROM examClassrooms WHERE fk_examCalendarID = ?";
+        db.query(q2, [examCalendarId], (err2, data2) => {
+          if (err2) {
+            console.error("Error during examClassrooms deletion:", err2);
+            return res.status(500).json({ message: "Sınav dersliklerini silme sırasında hata oluştu." });
           }
+
+          fk_classroomIDs.forEach((classroomID) => {
+            const q3 = "INSERT INTO examClassrooms (fk_classroomID, fk_examCalendarID) VALUES (?, ?)";
+            db.query(q3, [classroomID, examCalendarId], (err3, data3) => {
+              if (err3) {
+                console.error("Tabloya ekleme sırasında hata:", err3);
+                return res.status(500).json({ message: "Tabloya ekleme sırasında hata oluştu." });
+              }
+            });
+          });
+
+          return res.json("Sınav takvimi güncellendi ve derslikler başarıyla güncellendi.");
         });
       });
-
-      return res.json("Sınav takvimi güncellendi ve derslikler başarıyla güncellendi.");
     });
   });
 };
+
+
 
 

@@ -81,8 +81,6 @@ const SinavTakvimi = () => {
   }, [selectedSemester, exams]);
 
 
-
-
   const semesterOptions = semesters.map((semester) => ({
     value: semester.semesterID,
     label: semester.semesterName,
@@ -141,9 +139,10 @@ const SinavTakvimi = () => {
         console.error("Sınav eklemede hata oluştu:", response.data);
       }
     } catch (error) {
-      console.error("Sınav eklemede hata oluştu:", error);
+      toast.error(error.response.data.message);
     }
   };
+
 
 
   //! SİLME İŞLEMİ;
@@ -216,9 +215,6 @@ const SinavTakvimi = () => {
       fk_invigilatorID: selectedExam?.fk_invigilatorID,
     };
 
-
-    console.log("Güncellenen sınav verileri:", updatedExamData);
-
     try {
       const response = await axios.put("http://localhost:8800/sinavTakvimi/" + selectedExam.examCalendarID, updatedExamData);
       if (response.status === 200) {
@@ -230,7 +226,7 @@ const SinavTakvimi = () => {
         console.error("Sınav güncellemede hata oluştu:", response.data);
       }
     } catch (error) {
-      console.error("Sınav güncellemede hata oluştu:", error);
+      toast.error(error.response.data.message);
     }
   }
 
@@ -359,7 +355,7 @@ const SinavTakvimi = () => {
         isOpen={editExamModalIsOpen}
         onRequestClose={() => setEditExamModalIsOpen(false)}
         contentLabel="Sınav Güncelle"
-        className="shadow-2xl border-2 border-gray-400 modal modal-overlay">
+        className="shadow-2xl border-2 border-gray-400 modal-update modal-overlay">
         <h2 className='text-lg font-semibold text-gray-800'>Sınav Güncelle</h2>
         <form>
           <button onClick={closeEditExamModal} className="close-button"> X </button>

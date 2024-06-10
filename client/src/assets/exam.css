@@ -12,6 +12,17 @@ body {
     table-layout: fixed;
 }
 
+.exam-table th:first-child,
+.exam-table td:first-child,
+.exam-table th:last-child,
+.exam-table td:last-child,
+.exam-table th:nth-child(5),
+.exam-table td:nth-child(5) {
+    width: 100px;
+    padding-left: 6px;
+    padding-right: 5px;
+}
+
 .modal {
     position: fixed;
     top: 50%;
