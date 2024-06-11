@@ -152,7 +152,7 @@ export const deleteExamCalendar = (req, res) => {
 };
 
 
-
+//! DENEME
 //! SINAV TAKVİMİ GÜNCELLE
 export const updateExamCalendar = (req, res) => {
   const examCalendarId = req.params.id;
