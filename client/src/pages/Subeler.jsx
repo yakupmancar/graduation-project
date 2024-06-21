@@ -187,7 +187,7 @@ const Subeler = () => {
               <div className='flex flex-col gap-y-5 '>
                 <div className='flex items-center'>
                   <label className='pr-2 text-gray-600 font-bold text-[17px]' htmlFor='branchName'>Şube Adı:</label> <br />
-                  <input type='text' id='branchName' name='branchName' required className=' outline-blue-500 border border-gray-300 py-1 rounded-md pl-2' />
+                  <input placeholder='Şube adı giriniz...' type='text' id='branchName' name='branchName' required className=' outline-blue-500 border border-gray-300 py-1 rounded-md pl-2 placeholder-[#808080]' />
                 </div>
 
                 <div className='flex items-center'>
@@ -215,7 +215,7 @@ const Subeler = () => {
               <div className='flex flex-col gap-y-5'>
                 <div className='flex items-center'>
                   <label className='pr-2 text-gray-600 font-bold text-[17px]' htmlFor='studentCount'>Öğrenci Sayısı:</label> <br />
-                  <input className=' outline-blue-500 border border-gray-300 py-1 rounded-md pl-2' type='number' id='studentCount' name='studentCount' required />
+                  <input placeholder='Öğrenci sayısı giriniz...' className=' outline-blue-500 border border-gray-300 py-1 rounded-md pl-2 placeholder-[#808080]' type='number' id='studentCount' name='studentCount' required />
                 </div>
 
                 <div className='flex items-center'>

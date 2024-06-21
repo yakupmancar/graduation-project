@@ -124,7 +124,6 @@ const Invigilators = () => {
                         <tr>
                             <th>Gözetmen Üye Adı</th>
                             <th>Gözetmen Üye Soyadı</th>
-                            <th>Görev Sayısı</th>
                             {currentUser.role == "Admin" && (
                                 <th>İşlemler</th>
                             )}
@@ -135,7 +134,6 @@ const Invigilators = () => {
                             <tr key={invigilator.invigilatorID}>
                                 <td>{invigilator.invigilatorFirstName}</td>
                                 <td>{invigilator.invigilatorLastName}</td>
-                                <td>{invigilator.dutyCount}</td>
                                 {currentUser.role == "Admin" && (
                                     <td>
                                         <div className='flex'>

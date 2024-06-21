@@ -29,6 +29,29 @@ const SinavTakvimi = () => {
   const [startTime, setStartTime] = useState('');
   const [examDate, setExamDate] = useState('');
 
+  //! PAGINATION
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 8;
+
+  const handlePagination = (data, currentPage, pageSize) => {
+    const startIndex = (currentPage - 1) * pageSize;
+    const endIndex = startIndex + pageSize;
+    return data.slice(startIndex, endIndex);
+  };
+  const displayedExams = handlePagination(exams);
+
+  const handleNextPage = () => {
+    if (currentPage < Math.ceil(exams.length / pageSize)) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+  const totalPages = Math.ceil(exams.length / pageSize);
 
   // Veri çekme işlemleri
   useEffect(() => {
@@ -247,7 +270,7 @@ const SinavTakvimi = () => {
 
         <button className='flex gap-x-2 items-center border-2 px-2 rounded border-[#A8AEB8] ml-auto mr-10'>
           <i className="fa-solid fa-download"></i>
-          <span>Sınav Programını İndir (.xlsx)</span>
+          <span>Sınav Takvimini İndir (.xlsx)</span>
         </button>
       </div>
 
@@ -267,7 +290,7 @@ const SinavTakvimi = () => {
           </tr>
         </thead>
         <tbody className='text-sm'>
-          {filteredExams.map((exam) => (
+          {handlePagination(filteredExams, currentPage, pageSize).map((exam) => (
             <tr key={exam.examCalendarID}>
               <td>{exam.courseCode}</td>
               <td>{exam.courseName}</td>
@@ -399,6 +422,27 @@ const SinavTakvimi = () => {
           </div>
         </form>
       </Modal>
+
+      {/* //! PAGINATE */}
+      <div className="flex justify-center gap-x-3 pt-12">
+        {currentPage > 1 && (
+          <button className='' onClick={handlePreviousPage}>
+            <i class="fa-solid fa-angle-left"></i>
+          </button>
+        )}
+        {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNumber) => (
+          <button key={pageNumber} className={`border border-gray-400 px-2 rounded-full ${pageNumber === currentPage ? 'text-black font-bold border-2 border-gray-600' : ''}`}
+            onClick={() => setCurrentPage(pageNumber)}>
+            {pageNumber}
+          </button>
+        ))}
+        {currentPage < totalPages && (
+          <button className='' onClick={handleNextPage} >
+            <i class="fa-solid fa-angle-right"></i>
+          </button>
+        )}
+      </div>
+
     </div>
   );
 };

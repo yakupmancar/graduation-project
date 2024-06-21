@@ -199,7 +199,7 @@ const DersTakvimi1 = () => {
     const earliestTime = '09:00';
     const latestTime = '16:50';
     if (startTime < earliestTime || endTime > latestTime) {
-      toast.error("Ders saatleri, belirlenen saat aralığının dışında olamaz!");
+      toast.error("Ders saatleri, belirlenen saat aralığının dışında olmamalıdır.");
       e.preventDefault();
       return;
     }
@@ -218,7 +218,7 @@ const DersTakvimi1 = () => {
     );
 
     if (isClassroomConflict) {
-      toast.error("Derslik Çakışması Tespit Edidi!");
+      toast.error("İlgili derslik, seçilen gün ve saatte başka bir sınıfa hizmet vermektedir.");
       e.preventDefault();
       return;
     }
@@ -237,7 +237,7 @@ const DersTakvimi1 = () => {
     );
 
     if (isInstructorConflict) {
-      toast.error("Öğretim Üyesi Çakışması Tespit Edildi!");
+      toast.error("Öğretim Üyesinin seçilen gün ve saatte başka bir dersi mevcuttur.");
       e.preventDefault();
       return;
     }
@@ -312,7 +312,7 @@ const DersTakvimi1 = () => {
     const earliestTime = '09:00';
     const latestTime = '16:50';
     if (startTime < earliestTime || endTime > latestTime) {
-      toast.error("Ders saatleri, belirlenen saat aralığının dışında olamaz!");
+      toast.error("Ders saatleri, belirlenen saat aralığının dışında olmamalıdır.");
       e.preventDefault();
       return;
     }
@@ -331,7 +331,7 @@ const DersTakvimi1 = () => {
     );
 
     if (isClassroomConflictUpdate) {
-      toast.error("Derslik Çakışması tesbit edildi!");
+      toast.error("İlgili derslik, seçilen gün ve saatte başka bir sınıfa hizmet vermektedir.");
       e.preventDefault();
       return;
     }
@@ -351,7 +351,7 @@ const DersTakvimi1 = () => {
     );
 
     if (isInstructorConflictUpdate) {
-      toast.error("Öğretim Üyesi Çakışması Tespit Edildi!");
+      toast.error("Öğretim Üyesinin seçilen gün ve saatte başka bir dersi mevcuttur.");
       e.preventDefault();
       return;
     }
