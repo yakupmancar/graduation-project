@@ -78,9 +78,9 @@ export const updateCourseCalendar = (req, res) => {
 };
 
 
+//! EXCEL ÇIKTI
 export const exportExcel = async (req, res) => {
   const educationID = req.params.educationID;
-
   try {
     const q = `
       SELECT 

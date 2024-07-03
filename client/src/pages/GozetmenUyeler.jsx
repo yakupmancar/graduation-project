@@ -17,7 +17,7 @@ const Invigilators = () => {
 
     //! PAGINATION
     const [currentPage, setCurrentPage] = useState(1);
-    const pageSize = 1;
+    const pageSize = 9;
 
     const handlePagination = (data) => {
         const startIndex = (currentPage - 1) * pageSize;

@@ -42,12 +42,16 @@ const Navbar = () => {
                     </div>
                 </section>
 
+                <section className='flex gap-x- items-center'>
+                    <h1 className='text-xl text-gray-300 font-bold'>AKADEMİK TAKVİM YÖNETİM PLATFORMU</h1>
+                    <img className='w-20' src="../../images/schedule2.png" alt="" />
+                </section>
 
                 <section className='flex gap-x-8 items-center'>
 
                     {currentUser?.role == "Admin" && (
                         <Link to="/register">
-                            <button className='font-semibold px-3 py-1 text-gray-300 border-l border-b rounded-md'>Kayıt at</button>
+                            <button className='font-semibold px-3 py-1 text-gray-300 border-l border-b rounded-md'>Kullanıcı Kaydı</button>
                         </Link>
                     )}
 
@@ -72,6 +76,7 @@ const Navbar = () => {
                             </div>
                         )}
                     </div>
+
                 </section>
             </nav>
 

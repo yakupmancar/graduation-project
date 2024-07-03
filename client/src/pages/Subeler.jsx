@@ -187,12 +187,12 @@ const Subeler = () => {
               <div className='flex flex-col gap-y-5 '>
                 <div className='flex items-center'>
                   <label className='pr-2 text-gray-600 font-bold text-[17px]' htmlFor='branchName'>Şube Adı:</label> <br />
-                  <input placeholder='Şube adı giriniz...' type='text' id='branchName' name='branchName' required className=' outline-blue-500 border border-gray-300 py-1 rounded-md pl-2 placeholder-[#808080]' />
+                  <input placeholder='Şube adı giriniz...' type='text' id='branchName' name='branchName' required className='ml-10 w-64 outline-blue-500 border border-gray-300 py-1 rounded-md pl-2 placeholder-[#808080]' />
                 </div>
 
                 <div className='flex items-center'>
                   <label className='pr-2 text-gray-600 font-bold text-[17px]' htmlFor='course'>Ders Bilgisi:</label>
-                  <Select className='w-72' id='course' name='course'
+                  <Select className='w-64 ml-5' id='course' name='course'
                     value={courseOptions.find(option => option.value === selectedCourse)}
                     onChange={(selectedOption) => setSelectedCourse(selectedOption.value)}
                     options={courseOptions}
@@ -202,7 +202,7 @@ const Subeler = () => {
 
                 <div className='flex items-center'>
                   <label className='pr-2 text-gray-600 font-bold text-[17px]' htmlFor='instructor'>Öğretim Üyesi:</label>
-                  <Select className='w-72'
+                  <Select className='w-64'
                     options={instructorOptions}
                     value={instructorOptions.find((option) => option.value === selectedInstructor)}
                     onChange={(selectedOption) => setSelectedInstructor(selectedOption.value)}
@@ -215,7 +215,7 @@ const Subeler = () => {
               <div className='flex flex-col gap-y-5'>
                 <div className='flex items-center'>
                   <label className='pr-2 text-gray-600 font-bold text-[17px]' htmlFor='studentCount'>Öğrenci Sayısı:</label> <br />
-                  <input placeholder='Öğrenci sayısı giriniz...' className=' outline-blue-500 border border-gray-300 py-1 rounded-md pl-2 placeholder-[#808080]' type='number' id='studentCount' name='studentCount' required />
+                  <input placeholder='Öğrenci sayısı giriniz...' className='w-64 outline-blue-500 border border-gray-300 py-1 rounded-md pl-2 placeholder-[#808080]' type='number' id='studentCount' name='studentCount' required />
                 </div>
 
                 <div className='flex items-center'>

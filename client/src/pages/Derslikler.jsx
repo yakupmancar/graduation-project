@@ -14,7 +14,7 @@ const Derslikler = () => {
 
     //! PAGINATION
     const [currentPage, setCurrentPage] = useState(1);
-    const pageSize = 5;
+    const pageSize = 9;
 
     const handlePagination = (data) => {
         const startIndex = (currentPage - 1) * pageSize;
@@ -129,7 +129,7 @@ const Derslikler = () => {
                 <table>
                     <thead>
                         <tr>
-                            <th>DerslikAdı</th>
+                            <th>Derslik Adı</th>
                             <th>Derslik Tipi</th>
                             <th>Kapasite(Ders)</th>
                             <th>Kapasite(Sınav)</th>

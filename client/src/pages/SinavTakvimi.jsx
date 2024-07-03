@@ -253,6 +253,26 @@ const SinavTakvimi = () => {
     }
   }
 
+  //! EXCEL ÇIKTI
+  const handleExportExcel = async () => {
+    try {
+      const response = await axios.get('http://localhost:8800/sinavTakvimi/exportExamCalendarToExcel', {
+        responseType: 'blob',
+      });
+
+      const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'sinav_programi.xlsx');
+      document.body.appendChild(link);
+      link.click();
+      link.parentNode.removeChild(link);
+    } catch (error) {
+      console.error('Excel dosyası indirilirken hata oluştu:', error);
+    }
+  };
+
 
   return (
     <div className='mt-7 exam-container ml-[-10px]'>
@@ -268,7 +288,7 @@ const SinavTakvimi = () => {
           <button onClick={openModal} className='border px-3 py-1 bg-green-600 text-gray-50 font-bold rounded-md'>Sınav Ekle</button>
         )}
 
-        <button className='flex gap-x-2 items-center border-2 px-2 rounded border-[#A8AEB8] ml-auto mr-10'>
+        <button onClick={handleExportExcel} className='flex gap-x-2 items-center border-2 px-2 rounded border-[#A8AEB8] ml-auto mr-10'>
           <i className="fa-solid fa-download"></i>
           <span>Sınav Takvimini İndir (.xlsx)</span>
         </button>

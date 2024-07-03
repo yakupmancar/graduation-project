@@ -222,5 +222,102 @@ export const updateExamCalendar = (req, res) => {
 };
 
 
+//! SINAV TAKVİMİ EXCEL ÇIKTISI
+export const exportExamCalendarToExcel = async (req, res) => {
+  try {
+    const q = `
+      SELECT 
+        examcalendar.examCalendarID,
+        examcalendar.fk_semesterID,
+        examcalendar.fk_branchID,
+        examcalendar.fk_invigilatorID,
+        examcalendar.examDate,
+        examcalendar.startTime,
+        branches.branchName,
+        branches.fk_instructorID as instructorID,
+        courses.courseName,
+        courses.courseCode,
+        courses.gradeLevel,
+        CONCAT(instructors.academicTitle, ' ', instructors.instructorFirstName, ' ', instructors.instructorLastName) AS instructorName,
+        CONCAT(invigilators.invigilatorFirstName, ' ', invigilators.invigilatorLastName) AS invigilatorName
+      FROM 
+        examcalendar
+      JOIN 
+        branches ON examcalendar.fk_branchID = branches.branchID
+      JOIN 
+        courses ON branches.fk_courseID = courses.courseID
+      JOIN 
+        instructors ON branches.fk_instructorID = instructors.instructorID
+      JOIN 
+        invigilators ON examcalendar.fk_invigilatorID = invigilators.invigilatorID
+    `;
+    db.query(q, (err, exams) => {
+      if (err) {
+        console.error('Veritabanından veri çekerken bir hata oluştu:', err);
+        return res.status(500).json({ message: 'Veritabanından veri çekerken bir hata oluştu' });
+      }
 
+      const promises = exams.map(exam => {
+        return new Promise((resolve, reject) => {
+          const q2 = "SELECT classrooms.classroomName FROM examClassrooms JOIN classrooms ON examClassrooms.fk_classroomID = classrooms.classroomID WHERE examClassrooms.fk_examCalendarID = ?";
+          db.query(q2, [exam.examCalendarID], (err2, data2) => {
+            if (err2) {
+              reject(err2);
+            } else {
+              exam.classroomNames = data2.map(row => row.classroomName);
+              resolve();
+            }
+          });
+        });
+      });
 
+      Promise.all(promises)
+        .then(() => {
+          const workbook = new ExcelJS.Workbook();
+          const worksheet = workbook.addWorksheet('Sınav Programı');
+
+          worksheet.columns = [
+            { header: 'Ders Kodu', key: 'courseCode', width: 15 },
+            { header: 'Ders Adı', key: 'courseName', width: 20 },
+            { header: 'Öğretim Görevlisi', key: 'instructorName', width: 20 },
+            { header: 'Tarih', key: 'examDate', width: 15 },
+            { header: 'Saat', key: 'startTime', width: 15 },
+            { header: 'Gözetmen', key: 'invigilatorName', width: 20 },
+            { header: 'Sınav Yeri', key: 'classroomNames', width: 30 },
+          ];
+
+          exams.forEach(exam => {
+            const examDate = new Date(exam.examDate);
+            const formattedDate = examDate.toLocaleDateString('tr-TR');
+            const examDay = examDate.toLocaleDateString('tr-TR', { weekday: 'long' });
+
+            worksheet.addRow({
+              courseCode: exam.courseCode,
+              courseName: exam.courseName,
+              instructorName: exam.instructorName,
+              examDate: `${formattedDate} ${examDay}`,
+              startTime: exam.startTime,
+              classroomNames: exam.classroomNames.join(', '),
+              invigilatorName: exam.invigilatorName,
+            });
+          });
+
+          res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+          res.setHeader('Content-Disposition', 'attachment; filename=sinav_programi.xlsx');
+
+          workbook.xlsx.write(res)
+            .then(() => {
+              res.end();
+            })
+            .catch(error => {
+              console.error('Excel dosyası oluşturulurken bir hata oluştu:', error);
+              res.status(500).json({ message: 'Excel dosyası oluşturulurken bir hata oluştu' });
+            });
+        })
+        .catch(err => res.status(500).json(err));
+    });
+  } catch (error) {
+    console.error('Excel dosyası oluşturulurken bir hata oluştu:', error);
+    res.status(500).json({ message: 'Excel dosyası oluşturulurken bir hata oluştu' });
+  }
+};

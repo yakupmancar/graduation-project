@@ -127,11 +127,11 @@ const Profile = () => {
             <section className='mt-6 flex flex-col gap-y-5'>
               <div>
                 <label className='pr-2 text-gray-600 font-bold text-[17px]'>İsim:</label>
-                <input name="firstName" value={updatedProfile.firstName} onChange={handleInputChange} type='text' required className=' outline-blue-500 border border-gray-300 py-1 mt-1 rounded-md pl-2' />
+                <input name="firstName" value={updatedProfile.firstName} onChange={handleInputChange} type='text' required className='ml-8 px-1 outline-blue-500 border border-gray-300 py-1 mt-1 rounded-md pl-2' />
               </div>
 
               <div>
-                <label className='pr-2 text-gray-600 font-bold text-[17px]'>Soyisim:</label>
+                <label className='pr-2 text-gray-600 font-bold text-[17px]'>Soy isim:</label>
                 <input name="lastName" value={updatedProfile.lastName} onChange={handleInputChange} type='text' required className=' outline-blue-500 border border-gray-300 py-1 mt-1 rounded-md pl-2' />
               </div>
 
@@ -154,13 +154,13 @@ const Profile = () => {
 
               <div>
                 <label className='pr-2 text-gray-600 font-bold text-[17px]'>Yeni Şifre:</label>
-                <input required name="newPassword" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} type='password' className=' outline-blue-500 border border-gray-300 py-1 mt-1 rounded-md pl-2'
+                <input required name="newPassword" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} type='password' className='ml-6 outline-blue-500 border border-gray-300 py-1 mt-1 rounded-md pl-2'
                 />
               </div>
 
-              <div>
-                <label className='pr-2 text-gray-600 font-bold text-[17px]'>Yeni Şifre(Tekrar):</label>
-                <input required name="confirmNewPassword" value={confirmNewPassword} onChange={(e) => setConfirmNewPassword(e.target.value)} type='password' className=' outline-blue-500 border border-gray-300 py-1 mt-1 rounded-md pl-2' />
+              <div className='flex items-center'>
+                <label className='pr-2 text-gray-600 font-bold text-[17px]'>Yeni Şifre <br />(Tekrar):</label>
+                <input required name="confirmNewPassword" value={confirmNewPassword} onChange={(e) => setConfirmNewPassword(e.target.value)} type='password' className='ml-7 outline-blue-500 border border-gray-300 py-1 rounded-md pl-2' />
               </div>
 
               <button onClick={handlePasswordUpdate} className="border px-3 py-1 mt-4 bg-green-600 text-gray-50 font-bold rounded-md">Şifreyi Güncelle</button>

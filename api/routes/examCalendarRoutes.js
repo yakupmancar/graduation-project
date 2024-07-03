@@ -1,5 +1,5 @@
 import express from "express";
-import { addExamCalendar, deleteExamCalendar, getExamCalendar, updateExamCalendar } from "../controllers/examCalendarControllers.js";
+import { addExamCalendar, deleteExamCalendar, exportExamCalendarToExcel, getExamCalendar, updateExamCalendar } from "../controllers/examCalendarControllers.js";
 
 const router = express.Router()
 
@@ -14,6 +14,9 @@ router.delete("/:id", deleteExamCalendar);
 
 // VERİ GÜNCELLE
 router.put("/:id", updateExamCalendar);
+
+//EXCEL ÇIKTI
+router.get("/exportExamCalendarToExcel", exportExamCalendarToExcel);
 
 export default router;
 
