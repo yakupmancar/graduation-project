@@ -187,7 +187,6 @@ const Dersler = () => {
                     </button>
                 )}
             </div>
-
         </div>
 
     )
