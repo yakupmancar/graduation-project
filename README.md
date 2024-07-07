@@ -1,1 +1,1 @@
-## Creating a course and exam calendar for university faculty members
+## Course and exam calendar creation platform for university faculty members
